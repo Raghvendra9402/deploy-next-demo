@@ -27,7 +27,7 @@ jobs:
       #     docker push ${{ secrets.DOCKER_USERNAME }}/deploy-demo:latest
       #     docker push ${{ secrets.DOCKER_USERNAME }}/deploy-demo:${{ github.sha }}
       - name: ssh into ec2
-        uses: appleboy/ssh-actions@v1.0.3
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ubuntu
