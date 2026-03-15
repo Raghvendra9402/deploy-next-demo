@@ -26,11 +26,17 @@ jobs:
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/deploy-demo:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/deploy-demo:${{ github.sha }}
-      - name: ssh into ec2
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ubuntu
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            kubectl set image deployment/next-deployment -n next next=${{ secrets.DOCKER_USERNAME }}/deploy-demo:${{ github.sha }}
+      - name: clone ops-repo and change the image
+        env:
+          OPS_TOKEN: ${{ secrets.OPS_REPO_TOKEN }}
+        run: |
+          git clone https://github.com/Raghvendra9402/ops-repo.git
+          cd ops-repo
+
+          sed -i `s|image: ${{ secrets.DOCKER_USERNAME }}/deploy-demo:.*|image: ${{ secrets.DOCKER_USERNAME }}/deploy-demo:${{ github.sha }}|' deployment.yml
+
+          git config user.name "Github Actions Bot"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Updated the server image tags to ${{ github.sha }}"
+          git push https://${OPS_TOKEN}@github.com/Raghvendra9402/ops-repo.git main
