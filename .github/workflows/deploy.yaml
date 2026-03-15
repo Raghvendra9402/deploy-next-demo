@@ -33,7 +33,7 @@ jobs:
           git clone https://github.com/Raghvendra9402/ops-repo.git
           cd ops-repo
 
-          sed -i `s|image: ${{ secrets.DOCKER_USERNAME }}/deploy-demo:.*|image: ${{ secrets.DOCKER_USERNAME }}/deploy-demo:${{ github.sha }}|' deployment.yml
+          sed -i "s|image: ${{ secrets.DOCKER_USERNAME }}/deploy-demo:.*|image: ${{ secrets.DOCKER_USERNAME }}/deploy-demo:${{ github.sha }}|" deployment.yml
 
           git config user.name "Github Actions Bot"
           git config user.email "actions@github.com"
