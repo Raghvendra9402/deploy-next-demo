@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 
 export default function Home() {
@@ -42,6 +43,9 @@ export default function Home() {
           >
             Documentation
           </a>
+          <button onClick={() => console.log(process.env.GEMINI_KEY)}>
+            click me
+          </button>
         </div>
       </main>
     </div>
