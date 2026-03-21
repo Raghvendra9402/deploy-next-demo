@@ -1,10 +1,17 @@
 import client from "prom-client";
 
-const registry = globalThis.metrics?.registry;
+function getRegistry() {
+  if (!globalThis.metrics?.registry) {
+    const registry = new client.Registry();
+    client.collectDefaultMetrics({ register: registry });
 
-if (!registry) {
-  throw new Error("Metrics registry not initailized");
+    globalThis.metrics = { registry };
+  }
+
+  return globalThis.metrics.registry;
 }
+
+const registry = getRegistry();
 
 export const requestCounter = new client.Counter({
   name: "http_requests_total",
